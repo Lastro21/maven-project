@@ -8,6 +8,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 public class OnlyReciverApplication extends SpringBootServletInitializer {
+
     public static void main(String[] args) {
         SpringApplication.run(OnlyReciverApplication.class, args);
     }
@@ -16,6 +17,7 @@ public class OnlyReciverApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(OnlyReciverApplication.class);
     }
+
 }
 
 
