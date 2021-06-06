@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    triggers{
+    pollSCM("*/1 * * * *")
+    }
     stages{
         stage("Init"){
             steps {
@@ -18,20 +21,24 @@ pipeline {
                 }
             }
         }
-        stage("Deploy to staging"){
-            steps {
-                echo "Deploy step..."
-                build job: "deploy_to_staging"
+        stage("Deployments"){
+        parallel{
+            stage ("Deploy to Staging") {
+                steps {
+                    echo "Deploy step..."
+                    sh "cp **/target/*.war /home/lastro/Downloads/tomcat-staging/webapps"
+                }
+            }
+            stage("Deploy to production"){
+                 steps {
+                    echo "Deploy step..."
+                    timeout(time: 5, unit:'DAYS') {
+                    input message: "Approve Prod deployment?"
+                 }
+                    sh "cp **/target/*.war /home/lastro/Downloads/tomcat-prod/webapps"
+            }
             }
         }
-        stage("Deploy to production"){
-            steps {
-                echo "Deploy step..."
-                timeout(time: 5, unit:'DAYS') {
-                    input message: "Approve Prod deployment?"
-                }
-                build job: "deploy_to_prod"
-            }
         }
     }
 }
