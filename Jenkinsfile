@@ -8,7 +8,7 @@ pipeline {
         }
         stage("Build"){
             steps {
-            echo "Init step..."
+            echo "Build step..."
                 sh "mvn clean package"
             }
             post {
@@ -18,9 +18,10 @@ pipeline {
                 }
             }
         }
-        stage("Deploy"){
+        stage("Deploy to staging"){
             steps {
                 echo "Deploy step..."
+                build job: "deploy_to_staging"
             }
         }
     }
