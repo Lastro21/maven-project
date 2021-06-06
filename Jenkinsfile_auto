@@ -32,6 +32,9 @@ pipeline {
             stage("Deploy to production"){
                  steps {
                     echo "Deploy step..."
+                    timeout(time: 5, unit:'DAYS') {
+                        input message: "Approve Prod deployment?"
+                    }
                     sh "cp **/*.war /home/lastro/Downloads/tomcat-prod/webapps"
             }
             }
