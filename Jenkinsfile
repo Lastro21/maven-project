@@ -24,5 +24,11 @@ pipeline {
                 build job: "deploy_to_staging"
             }
         }
+        stage("Deploy to production"){
+            steps {
+                echo "Deploy step..."
+                build job: "deploy_to_prod"
+            }
+        }
     }
 }
