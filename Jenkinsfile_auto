@@ -1,17 +1,17 @@
 pipeline {
     agent any
-    triggers{
-    pollSCM("*/1 * * * *")
+    triggers {
+        pollSCM("*/1 * * * *")
     }
-    stages{
-        stage("Init"){
+    stages {
+        stage("Init") {
             steps {
                 echo "Init step..."
             }
         }
-        stage("Build"){
+        stage("Build") {
             steps {
-            echo "Build step..."
+                echo "Build step..."
                 sh "mvn clean package"
             }
             post {
@@ -21,24 +21,24 @@ pipeline {
                 }
             }
         }
-        stage("Deployments"){
-        parallel{
-            stage ("Deploy to Staging") {
-                steps {
-                    echo "Deploy step..."
-                    sh "cp **/*.war /home/lastro/Downloads/tomcat-staging/webapps"
+        stage("Deployments") {
+            parallel {
+                stage("Deploy to Staging") {
+                    steps {
+                        echo "Deploy step..."
+                        sh "cp **/*.war /home/lastro/Downloads/tomcat-staging/webapps"
+                    }
+                }
+                stage("Deploy to production") {
+                    steps {
+                        echo "Deploy step..."
+                        timeout(time: 5, unit: 'DAYS') {
+                            input message: "Approve Prod deployment?"
+                        }
+                        sh "cp **/*.war /home/lastro/Downloads/tomcat-prod/webapps"
+                    }
                 }
             }
-            stage("Deploy to production"){
-                 steps {
-                    echo "Deploy step..."
-                    timeout(time: 5, unit:'DAYS') {
-                        input message: "Approve Prod deployment?"
-                    }
-                    sh "cp **/*.war /home/lastro/Downloads/tomcat-prod/webapps"
-            }
-            }
-        }
         }
     }
 }

@@ -1,14 +1,14 @@
 pipeline {
     agent any
-    stages{
-        stage("Init"){
+    stages {
+        stage("Init") {
             steps {
                 echo "Init step..."
             }
         }
-        stage("Build"){
+        stage("Build") {
             steps {
-            echo "Build step..."
+                echo "Build step..."
                 sh "mvn clean package"
             }
             post {
@@ -18,16 +18,16 @@ pipeline {
                 }
             }
         }
-        stage("Deploy to staging"){
+        stage("Deploy to staging") {
             steps {
                 echo "Deploy step..."
                 build job: "deploy_to_staging"
             }
         }
-        stage("Deploy to production"){
+        stage("Deploy to production") {
             steps {
                 echo "Deploy step..."
-                timeout(time: 5, unit:'DAYS') {
+                timeout(time: 5, unit: 'DAYS') {
                     input message: "Approve Prod deployment?"
                 }
                 build job: "deploy_to_prod"
